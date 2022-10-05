@@ -1,17 +1,30 @@
 <template>
 <div>
-  <div @click="menuclick(menudata)">{{menudata.meta.title}}</div>
 
+
+  <el-menu-item v-if="!menudata.children" :index="menudata.path">
+    {{menudata.meta.title}}
+  </el-menu-item>
+
+  <el-sub-menu v-if="menudata.children" :index="menudata.path">
+    <template #title>
+      <span>{{menudata.meta.title}}</span>
+    </template>
     <div v-for="(menu,key) in menudata.children" :key="key">
-      <Menu v-if="!menu.meta.hidden && showsubmenu" :menudata="menu"></Menu>
+      <Menu v-if="showsubmenu && has_menupermission(menu.path)" :menudata="menu"></Menu>
 
-  </div>
+    </div>
+  </el-sub-menu>
+
 </div>
 </template>
 <script setup>
 import {useRouter} from 'vue-router'
 import { defineProps, reactive,onMounted,ref } from 'vue'
+import {useStore} from "vuex";
+import {has_menupermission} from "@/utils/index.js";
 const showsubmenu=ref(1);
+const store=useStore()
 const props=defineProps({
    menudata: Object,
    showchildren:{type:Boolean,required:false,default:true},

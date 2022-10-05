@@ -1,3 +1,4 @@
+import store from '@/store'
 export function localGet (key) {
   const value = window.localStorage.getItem(key)
   try {
@@ -13,4 +14,11 @@ export function localSet (key, value) {
 
 export function localRemove (key) {
   window.localStorage.removeItem(key)
+}
+
+export function has_menupermission (menupath){
+ if(store.state.userrole==1){
+   return true
+ }
+  return store.state.allowmenus.indexOf(menupath)!=-1
 }

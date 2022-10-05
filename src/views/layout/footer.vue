@@ -1,5 +1,7 @@
 <template>
-  <h1>pc-Footer</h1>
+  <div >
+    <div style="float:right">fengchuan</div>
+  </div>
 </template>
 <script setup></script>
 <style></style>

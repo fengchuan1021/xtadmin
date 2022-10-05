@@ -17,9 +17,11 @@
 </template>
 <script setup>
 import {reactive,ref} from 'vue'
+import { useStore } from 'vuex'
 import axios from '@/utils/axios'
 import {localSet} from '@/utils/index'
 import {useRouter} from 'vue-router'
+import jwt_decode from "jwt-decode";
 const router=useRouter()
 const formrules={
   username: [
@@ -31,7 +33,7 @@ const formrules={
 }
 const formdata=reactive({'username':'','password':''})
 const loginForm = ref(null)
-
+const store=useStore()
 const onLogin=()=>{
   loginForm.value.validate((valid) => {
     if (valid) {
@@ -41,7 +43,7 @@ const onLogin=()=>{
         password: formdata.password
       }).then(ret => {
         if (ret.token){
-
+          store.commit('setNewObj',jwt_decode(ret.token))
           localSet('token', ret.token)
           if (ret.refreshtoken){
 

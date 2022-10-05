@@ -13,7 +13,11 @@ let routes=[
                 meta: { title: 'dashboard'},
                 component: () => import('../views/404.vue'),
             },
-
+            {
+                path: '/dashboard2',
+                meta: { title: 'dashboard2'},
+                component: () => import('../views/404.vue'),
+            },
             {
                 path:'/permission',
                 redirect:'/permission/rolelist',
@@ -23,11 +27,12 @@ let routes=[
                         path:'/permission/rolelist',
                         meta: { title: 'role list'},
                         component: () => import('../views/permission/rolelist.vue'),
+
                     },
                     {
                         path:'/permission/apilist',
-                        meta: { title: 'api list'},
-                        component: () => import('../views/permission/apilist.vue'),
+                        meta: { title: 'role permission'},
+                        component: () => import('../views/permission/apipermissionlist.vue'),
                     },
                     {
                         path:'/permission/viewslist',
