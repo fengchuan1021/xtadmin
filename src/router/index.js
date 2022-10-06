@@ -6,7 +6,7 @@ let routes=[
     {
         path: '/',
         component: () => import('../views/layout/layout.vue'),
-        redirect: '/permission/rolelist',
+        redirect: '/product/addproduct',
         children: [
             {
                 path: '/dashboard',
@@ -17,6 +17,52 @@ let routes=[
                 path: '/dashboard2',
                 meta: { title: 'dashboard2'},
                 component: () => import('../views/404.vue'),
+            },
+            {
+                path:'/product',
+                redirect:'/product/productlist',
+                meta: { title: 'product'},
+                children:[
+                    {
+                        path:'/product/productlist',
+                        meta: { title: 'product list'},
+                        component: () => import('../views/product/productlist.vue'),
+
+                    },
+                    {
+                        path:'/product/addproduct',
+                        meta: { title: 'add product'},
+                        component: () => import('../views/product/addproduct.vue'),
+                    },
+                    {
+                        path:'/product/category',
+                        meta: { title: 'category'},
+                        component: () => import('../views/product/category.vue'),
+                    },
+                    {
+                        path:'/product/addcategory',
+                        meta: { title: 'add category'},
+                        component: () => import('../views/product/addcategory.vue'),
+                    },
+                ]
+            },
+            {
+                path:'/user',
+                redirect:'/user/userlist',
+                meta: { title: 'user'},
+                children:[
+                    {
+                        path:'/user/userlist',
+                        meta: { title: 'user list'},
+                        component: () => import('../views/user/userlist.vue'),
+
+                    },
+                    {
+                        path:'/user/adduser',
+                        meta: { title: 'add user'},
+                        component: () => import('../views/user/adduser.vue'),
+                    },
+                ]
             },
             {
                 path:'/permission',

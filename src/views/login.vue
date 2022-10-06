@@ -1,5 +1,6 @@
 <template>
   <div id="loginform">
+    <el-card>
     <el-form ref="loginForm" :model="formdata" :rules="formrules">
       <el-form-item label="username" prop="username">
         <el-input v-model.trim="formdata.username"></el-input>
@@ -9,10 +10,11 @@
         <el-input type="password" v-model.trim="formdata.password"></el-input>
       </el-form-item>
 
-      <el-form-item>
+      <div id="loginbtn">
         <el-button type="primary" @click="onLogin">login</el-button>
-      </el-form-item>
+      </div>
     </el-form>
+    </el-card>
   </div>
 </template>
 <script setup>
@@ -22,6 +24,7 @@ import axios from '@/utils/axios'
 import {localSet} from '@/utils/index'
 import {useRouter} from 'vue-router'
 import jwt_decode from "jwt-decode";
+
 const router=useRouter()
 const formrules={
   username: [
@@ -43,6 +46,8 @@ const onLogin=()=>{
         password: formdata.password
       }).then(ret => {
         if (ret.token){
+          axios.defaults.headers['token']=ret.token
+          store.commit('setToken',ret.token)
           store.commit('setNewObj',jwt_decode(ret.token))
           localSet('token', ret.token)
           if (ret.refreshtoken){
@@ -65,8 +70,15 @@ const onLogin=()=>{
 </script>
 <style scoped>
 #loginform{
+  display:flex;
+  justify-content: center;
+  flex-direction:column;
   width:500px;
-  height:500px;
+  height:600px;
   margin: 0 auto;
+}
+#loginbtn{
+  display:flex;
+  justify-content: center;
 }
 </style>

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 import { localGet } from './index'
-
+import store from '@/store'
 
 
 // 这边由于后端没有区分测试和正式，姑且都写成一个接口。

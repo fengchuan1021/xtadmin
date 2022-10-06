@@ -26,8 +26,11 @@ const store=useStore()
 
 onMounted(()=>{
   let token=localGet('token')
-  store.commit('setNewObj',jwt_decode(token))
+  if(token) {
+    store.commit('setToken',token)
+    store.commit('setNewObj', jwt_decode(token))
 
+  }
   axios.get('/backend/permission/getroledisplayedmenu').then(ret=>{
     if(ret.status=='success'){
       store.commit('setAllowMenus',ret.menus)

@@ -1,7 +1,7 @@
 <template>
-  <div style="display:flex;flex-direction:column">
+  <div style="display:flex;flex-direction:column;height:100%">
   <Header />
-  <Main />
+  <Main style="flex:1"/>
   <Footer />
   </div>
 </template>

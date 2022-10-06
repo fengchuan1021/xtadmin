@@ -8,7 +8,8 @@ const store = createStore({
         userrole:0,
         is_guest:true,
         nickname:'',
-        allowmenus:[]
+        allowmenus:[],
+        token:'',
     },
     mutations: {
         setNewObj(state,newobj) {
@@ -16,6 +17,9 @@ const store = createStore({
         },
         setAllowMenus(state,newmenus){
             state.allowmenus=newmenus
+        },
+        setToken(state,token){
+            state.token=token
         }
     },
     getters:{
@@ -23,6 +27,7 @@ const store = createStore({
         userrole:state=>state.userrole,
         is_guest:state=>state.is_guest,
         allowmenus:state=>state.allowmenus,
+        token:state=>state.token,
     }
 })
 
