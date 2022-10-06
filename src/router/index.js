@@ -1,23 +1,54 @@
 import { createWebHashHistory, createRouter } from 'vue-router'
 import { localGet } from '@/utils'
 import NProgress from 'nprogress'
-// pc端的路由
+// 路由
 let routes=[
     {
         path: '/',
         component: () => import('../views/layout/layout.vue'),
         redirect: '/product/addproduct',
         children: [
+            // {
+            //     path: '/dashboard',
+            //     meta: { title: 'dashboard'},
+            //     component: () => import('../views/404.vue'),
+            // },
+            // {
+            //     path: '/dashboard2',
+            //     meta: { title: 'dashboard2'},
+            //     component: () => import('../views/404.vue'),
+            // },
+
+
             {
-                path: '/dashboard',
-                meta: { title: 'dashboard'},
-                component: () => import('../views/404.vue'),
+                path:'/shopandwarehouse',
+                redirect:'/shopandwarehouse/shoplist',
+                meta: { title: 'shop & warehouse'},
+                children:[
+                    {
+                        path:'/shopandwarehouse/shoplist',
+                        meta: { title: 'shop list'},
+                        component: () => import('../views/shopandwarehouse/shoplist.vue'),
+
+                    },
+                    {
+                        path:'/shopandwarehouse/addshop',
+                        meta: { title: 'add shop'},
+                        component: () => import('../views/shopandwarehouse/addshop.vue'),
+                    },
+                    {
+                        path:'/shopandwarehouse/warehouselist',
+                        meta: { title: 'ware house'},
+                        component: () => import('../views/shopandwarehouse/warehouselist.vue'),
+                    },
+                    {
+                        path:'/shopandwarehouse/addwarehouse',
+                        meta: { title: 'add warehouse'},
+                        component: () => import('../views/shopandwarehouse/addwarehouse.vue'),
+                    },
+                ]
             },
-            {
-                path: '/dashboard2',
-                meta: { title: 'dashboard2'},
-                component: () => import('../views/404.vue'),
-            },
+
             {
                 path:'/product',
                 redirect:'/product/productlist',

@@ -1,6 +1,7 @@
 <template>
+  <el-card>
 
-  <div><h4>添加产品</h4></div>
+
   <el-form>
     <el-form-item label="prodduct name:">
       <el-input v-model="product.productname_en"></el-input>
@@ -69,7 +70,7 @@
   </el-form>
 
 
-
+  </el-card>
 </template>
 
 <script setup>
