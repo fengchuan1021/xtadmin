@@ -41,11 +41,7 @@ let routes=[
                         meta: { title: 'ware house'},
                         component: () => import('../views/shopandwarehouse/warehouselist.vue'),
                     },
-                    {
-                        path:'/shopandwarehouse/addwarehouse',
-                        meta: { title: 'add warehouse'},
-                        component: () => import('../views/shopandwarehouse/addwarehouse.vue'),
-                    },
+
                 ]
             },
 

@@ -56,6 +56,8 @@ const onLogin=()=>{
 
           }
           router.push({'path':'/'})
+        }else{
+          ElMessage.warning("username or password not right")
         }
 
       },onerror=>{

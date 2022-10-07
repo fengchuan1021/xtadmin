@@ -3,20 +3,20 @@
 
     <template #header>
       <!--        顶部搜索和按钮-->
-      <el-form inline ref="filterform">
+<!--      <el-form inline ref="filterform">-->
 
-        <el-form-item label="role_name:">
-          <el-select v-model="state.filter.role_name"></el-select>
-        </el-form-item>
+<!--        <el-form-item label="role_name:">-->
+<!--          <el-select v-model="state.filter.role_name"></el-select>-->
+<!--        </el-form-item>-->
 
-        <el-form-item label="api_name:">
-          <el-input v-model="state.filter.api_name"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="onSearch">search</el-button>
-        </el-form-item>
+<!--        <el-form-item label="api_name:">-->
+<!--          <el-input v-model="state.filter.api_name"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item>-->
+<!--          <el-button @click="onSearch">search</el-button>-->
+<!--        </el-form-item>-->
 
-      </el-form>
+<!--      </el-form>-->
 
       <!--        结束搜索和按钮-->
     </template>
