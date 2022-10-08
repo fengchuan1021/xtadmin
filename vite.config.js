@@ -6,6 +6,7 @@ import Inspect from 'vite-plugin-inspect'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import path from 'path'
+import ViteRestart from 'vite-plugin-restart'
 const pathSrc = path.resolve(__dirname, 'src')
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
