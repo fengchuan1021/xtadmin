@@ -5,14 +5,14 @@
   <div style="display:flex">
     <div>
       <div>chose a role:</div>
-      <el-select v-model="form.role_id">
+      <el-select v-model="form.role_id" @change="showrolemenu">
         <el-option v-for="(role,key) in rolelist" :key="key" :value="role.id" :label="role.role_name">{{role.role_name}}</el-option>
       </el-select>
     </div>
     <el-divider direction="vertical" border-style="solid" style="display:block;min-height:100px;margin-left:30px;" />
     <div style="margin-left:30px">
       <div>chose menu to display:</div>
-    <el-tree ref="menutree" show-checkbox :data="data" :props="defaultProps" />
+    <el-tree ref="menutree" show-checkbox :data="data" :props="defaultProps" node-key="path" :default-expand-all="true"/>
     </div>
   </div>
     <div style="margin-left:180px;margin-top:40px;">
@@ -29,9 +29,27 @@ const data=routes[0].children
 let form=reactive({role_id:null})
 let rolelist=ref([])
 const menutree=ref()
+const searchpath=(node,path)=>{
+  if (node.path==path){
+    return node
+  }
+  if(node.children?.length){
+    for(let i =0;i<node.children.length;i++){
+      let tmp=searchpath(node.children[i],path)
+      if (tmp) return tmp
+    }
+  }
+  return null
+}
 const defaultProps = {
   children: 'children',
   label: (nodedata,node)=>{ console.log(nodedata);return nodedata.meta.title},
+}
+const showrolemenu=()=>{
+  axios.get(`/backend/permission/admingetroledisplayedmenu?role_id=${form.role_id}`).then(ret=>{
+
+    menutree.value.setCheckedKeys(ret.menus.filter(menu=>searchpath(routes[0],menu)?.children ? false : true))
+  })
 }
 const handleNodeClick = (data) => {
   console.log(data)

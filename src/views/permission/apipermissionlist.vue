@@ -3,7 +3,7 @@
     <div style="display:flex;">
     <div>
       <div>chose a role:</div>
-      <el-select v-model="form.role_id">
+      <el-select v-model="form.role_id" @change="settreeselected">
         <el-option v-for="(role,key) in roles" :key="key" :value="role.id" :label="role.role_name">{{role.role_name}}</el-option>
       </el-select>
     </div>
@@ -24,13 +24,13 @@
   <el-form inline ref="filterform">
 
   <el-form-item label="role_name:">
-    <el-select v-model="state.filter.role_id">
+    <el-select v-model="state.filter.role_id" clearable @clear="() => { state.filter.role_id=null } ">
       <el-option v-for="(role,index) in roles" :label="role.role_name" :value="role.id"></el-option>
     </el-select>
   </el-form-item>
 
     <el-form-item label="api_name:">
-      <el-input v-model="state.filter.api_name"></el-input>
+      <el-input v-model="state.filter.api_name__contains" clearable  @clear="() => { state.filter.api_name__contains=null } "></el-input>
     </el-form-item>
 <el-form-item>
   <el-button @click="onSearch">search</el-button>
@@ -49,6 +49,11 @@
     <el-table-column prop="role_id" label="role_id"  />
     <el-table-column prop="role_name" label="role_name"  />
     <el-table-column prop="api_name" label="api_name" />
+    <el-table-column label="action">
+      <template #default="scope">
+        <el-button @click="deltepermission(scope.row.permission_id)">delete</el-button>
+      </template>
+    </el-table-column>
   </el-table>
 
     <!--       分页-->
@@ -69,12 +74,12 @@ import {onMounted, reactive,ref} from 'vue'
 
 const rolepermissionflg=ref(false)
 
-let state=reactive({pagenum:1,pagesize:2,filter:{role_id:null,api_name:''},total:0})
+let state=reactive({pagenum:1,pagesize:20,filter:{role_id:null,api_name__contains:null},total:0})
 let data=ref([])
 const roles=ref([])
 const apilist=ref([])
 const apitree=ref()
-let form=reactive({role_id:1})
+let form=reactive({role_id:null})
 const defaultProps = {
   children: 'children',
   label: 'label',
@@ -82,8 +87,17 @@ const defaultProps = {
 const onSearch=()=>{
   getdata()
 }
+const deltepermission=(permission_id)=>{
+  axios.post(`/backend/permission/delrolepermission/${permission_id}`).then(ret=>{
+    if(ret.status=='success'){
+      ElMessage.success("delete role permission successfully")
+      getdata()
+    }
+  })
+}
 const showaddrolepermission=()=>{
   rolepermissionflg.value=true
+
 }
 const setrolepermission=()=>{
   //let paths=apitree.value.getCheckedNodes(true).map(item=>item.label)
@@ -94,6 +108,18 @@ const setrolepermission=()=>{
     }
   })
 
+}
+const settreeselected=()=>{
+  axios.post("/backend/permission/permissionlist",{pagenum:1,pagesize:99999,filter:{role_id:form.role_id}}).then(ret=>{
+    if (ret.status=='success'){
+      //data.value=ret.data
+     console.log('keys:',ret.data.map(item=>item.api_name))
+      apitree.value.setCheckedKeys(ret.data.map(item=>item.api_name))
+    }else{
+
+    }
+  })
+  //apitree.value.getCheckedNodes(true).map
 }
 const getdata=()=>{
   axios.post("/backend/permission/permissionlist",state).then(ret=>{
@@ -118,8 +144,9 @@ const getapilist=()=>{
   axios.get('/backend/permission/route/').then(ret=>{
 
      apilist.value=[ret]
-    console.log('apilist:',apilist)
 
+
+    //apitree.value.setChecked('backend',true,true)
 
   })
 }
