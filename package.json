@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "staging": "vite --mode staging",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
@@ -29,6 +30,7 @@
     "unplugin-vue-components": "^0.22.7",
     "vite": "^3.1.0",
     "vite-plugin-inspect": "^0.7.5",
+    "vite-plugin-restart": "^0.2.0",
     "vue-tsc": "^0.40.4"
   }
 }

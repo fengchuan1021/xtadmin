@@ -11,6 +11,11 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    ViteRestart({
+      restart: [
+        'vite.config.js','.env.staging','.env.development'
+      ]
+    }),
     vue(),
     AutoImport({
       imports: ['vue'],
