@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "staging": "vue-tsc --noEmit && vite build --mode staging",
+    "staging": "vite build --mode staging",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
