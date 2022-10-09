@@ -43,6 +43,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
+  build: {
+    outDir: '/html/vueadmin'
+  },
   server: {
     host:true,
     proxy: {
