@@ -66,8 +66,8 @@
 
       <el-table-column label="action">
         <template #default="scope">
-          <el-button @click="deltepermission(scope.row.permission_id)">edit</el-button>
-          <el-button @click="delteattrspec(scope.row.permission_id)">delete</el-button>
+          <el-button @click="deltepermission(scope.row.preattrspecific_id)">edit</el-button>
+          <el-button @click="delteattrspec(scope.row.preattrspecific_id)">delete</el-button>
         </template>
 
       </el-table-column>

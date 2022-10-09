@@ -55,7 +55,7 @@
 
             <el-autocomplete class="attributenname"
                              v-model="attribute.name"
-                             clearable
+
                              placeholder="attribute"
                              :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'attribute')"
                              @select="(item)=>onattributeselect(item,index)"
@@ -67,7 +67,7 @@
             <el-autocomplete
                 v-model="attribute.value"
                 :fetch-suggestions="(a,b)=>attributetip(a,b,index)"
-                clearable
+
                 class="inline-input w-50"
                 placeholder="Please Input"
             />
