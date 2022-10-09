@@ -13,11 +13,32 @@ let routes=[
             //     meta: { title: 'dashboard'},
             //     component: () => import('../views/404.vue'),
             // },
-            // {
-            //     path: '/dashboard2',
-            //     meta: { title: 'dashboard2'},
-            //     component: () => import('../views/404.vue'),
-            // },
+            {
+                path: '/order',
+                redirect:'/order/orderlist',
+                meta: { title: 'order'},
+                children:[
+                    {
+                        path:'/order/orderlist',
+                        meta: { title: 'order list'},
+                        component: () => import('../views/order/orderlist.vue'),
+
+                    },
+                    {
+                        path:'/order/refundorder',
+                        meta: { title: 'refund order'},
+                        component: () => import('../views/order/refundorder.vue'),
+
+                    },
+                    {
+                        path:'/order/reshiporder',
+                        meta: { title: 'reship order'},
+                        component: () => import('../views/order/reshiporder.vue'),
+
+                    },
+
+                ]
+            },
 
 
             {
