@@ -3,6 +3,7 @@
 
 
   <el-form>
+
     <el-form-item label="prodduct name:">
       <el-input v-model="product.productname_en"></el-input>
     </el-form-item>
@@ -10,27 +11,24 @@
     <el-form-item label="add Specification:">
       <div class="specificationdiv">
         <div v-for="(specification,index) in product.specifications" :key="index">
-          <div>specification name:
+          <div><IconDelete20Filled @click="removeSpecification(index)"></IconDelete20Filled>specification name:
             <el-autocomplete class="specificationname"
                              v-model="specification.name"
                              clearable
                              placeholder="colour,volume,size,etc."
-                             :fetch-suggestions="querySearch"
-                             @select="handleSelect"
+                             :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'specification')"
+                             @select="(item)=>onspecificationselect(item,index)"
             >
 
-              <!--        <template #suffix>-->
-              <!--        <el-icon class="el-input__icon"><Close @click="removeSpecification(index)"/></el-icon>-->
-              <!--      </template>-->
             </el-autocomplete>
-            specification value:<el-input class="specificationvalue" v-for="(v,index2) in specification.value" :key='index2' v-model="specification.value[index2]"
-            >
+            specification value:
+            <el-input class="specificationvalue" v-for="(v,index2) in specification.value" :key='index2' v-model="specification.value[index2]">
               <template #suffix>
-                <el-icon class="el-input__icon"><Close @click="removeSpecificationValue(index,index2)"/></el-icon>
+                <IconDelete20Filled style='cursor:pointer' @click="removeSpecificationValue(index,index2)"/>
               </template>
             </el-input>
             <el-icon :size="20" color="#409EFC">
-              <Plus @click="addSpecificationValue(specification)"/>
+              <IconAddIcon @click="addSpecificationValue(specification)"/>
             </el-icon>
           </div>
         </div>
@@ -54,7 +52,26 @@
       <div style="display:flex;flex-direction:column">
         <div>
           <div v-for="(attribute,index) of product.attributes" :key="index" style="display:flex;">
-            <el-input v-model="attribute.name"></el-input>: <el-input v-model="attribute.value"></el-input> <el-icon><Close @click="deleteattribute(index)"></Close></el-icon>
+
+            <el-autocomplete class="attributenname"
+                             v-model="attribute.name"
+                             clearable
+                             placeholder="attribute"
+                             :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'attribute')"
+                             @select="(item)=>onattributeselect(item,index)"
+            >
+
+            </el-autocomplete>
+
+            :
+            <el-autocomplete
+                v-model="attribute.value"
+                :fetch-suggestions="(a,b)=>attributetip(a,b,index)"
+                clearable
+                class="inline-input w-50"
+                placeholder="Please Input"
+            />
+           <IconDelete20Filled @click="deleteattribute(index)"></IconDelete20Filled>
           </div>
         </div>
         <div>
@@ -76,10 +93,10 @@
 <script setup>
 
 import {onMounted, reactive, watch} from 'vue'
-// eslint-disable-next-line
+import IconDelete20Filled from '~icons/fluent/delete-20-filled';
+import IconAddIcon from '~icons/carbon/add';
 import axios from '@/utils/axios'
 const product=reactive({"specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
-let allspecifications=reactive([])
 
 const calcDescartes=(array)=>{
   if (array.length < 2) return array[0] || [];
@@ -115,27 +132,42 @@ const addSpecification=()=>{
 const deleteattribute=(index)=>{
   product.attributes.splice(index,1)
 }
-const getallspecifications=()=>{
-  axios.get("/backend/specification").then(ret=>{
-    allspecifications=ret.data
-  })
-}
-onMounted(()=>{
-  getallspecifications()
-})
-const querySpecification=(queryString, cb) => {
 
-  // call callback function to return suggestions
-  cb(results)
-}
+onMounted(()=>{
+
+})
+
 // eslint-disable-next-line
 const removeSpecification=(index)=>{
   product.specifications.splice(index,1)
 }
+const attributetip=(queryString, cb,index)=>{
+  let values=Object.values(product.attributes[index]['choseablevalue'])
+  let tmpvalue=values.filter(item=>item.toLowerCase().indexOf(queryString.toLowerCase())!=-1).map(s=>{return {'value':s}})
+  cb(tmpvalue)
+}
+const querySpecification=(queryString, cb,index,type)=>{
+  axios.post(`/backend/product/preattrspecific`,{pagesize:200,filter:{name_en__contains:queryString,type:type}}).then(ret=>{
+    if(ret.status=='success'){
+      let values=ret.data.map(item=>{
+        let tmp={}
+        tmp['value']=item.name_en
+        tmp['values']=item.value_en.split(',')
+        return tmp
+      })
+      cb(values)
+    }
+  })
+}
+
+const onspecificationselect=(item,index)=>{
+  product.specifications[index]['value']=item.values
+}
+const onattributeselect=(item,index)=>{
+  product.attributes[index]['choseablevalue']=item.values
+}
 const addSpecificationValue=(specification)=>{
-  console.log(specification)
   specification.value.push("")
-  console.log(specification)
 }
 const removeSpecificationValue=(index,valueindex)=>{
   product.specifications[index].value.splice(valueindex,1)

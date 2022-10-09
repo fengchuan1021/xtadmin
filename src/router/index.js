@@ -92,6 +92,11 @@ let routes=[
                         meta: { title: 'add category'},
                         component: () => import('../views/product/addcategory.vue'),
                     },
+                    {
+                        path:'/product/predefineattrspec',
+                        meta: { title: 'predefine attr & specification'},
+                        component: () => import('../views/product/predefineattrspec.vue'),
+                    },
                 ]
             },
             {
