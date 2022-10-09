@@ -35,6 +35,7 @@ const append=(node,data)=>{
         axios.post('/backend/product/addcategory',{'category_name':value,parent_id:data.category_id}).then(ret=>{
           if(ret.status=='success'){
             ElMessage.success("add category success!")
+            getdata()
           }
         })
       })
@@ -50,15 +51,19 @@ const remove=(node,data)=>{
 axios.post('/backend/product/delcategory',{category_id:data.category_id}).then(ret=>{
   if(ret.status=='success'){
     ElMessage.success("delete category success!")
+    getdata()
   }
 })
 }
-onMounted(()=>{
+const getdata=()=>{
   axios.get('/backend/product/getcategorytree').then(ret=>{
     if (ret.status=='success'){
       data.value=ret.data
       console.log('data:',data.value)
     }
   })
+}
+onMounted(()=>{
+  getdata()
 })
 </script>
