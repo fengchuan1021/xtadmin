@@ -1,12 +1,12 @@
 import axios from 'axios'
 
 
-import { localGet } from './index'
+import { localGet,localRemove } from './index'
 import store from '@/store'
+import router from '@/router'
 
 
-// 这边由于后端没有区分测试和正式，姑且都写成一个接口。
-axios.defaults.baseURL =import.meta.env.VITE_BASE_URL || '/api'
+axios.defaults.baseURL =import.meta.env.VITE_BASE_URL
 
 // 携带 cookie，对目前的项目没有什么作用，因为我们是 token 鉴权
 axios.defaults.withCredentials = true
@@ -22,10 +22,36 @@ axios.interceptors.response.use(res => {
     return res.data
 
 },ret=>{
-
+    if(ret.name && ret.name=='CanceledError'){
+        return Promise.resolve({'status':'failed','msg':"token expired"})
+    }
    ElMessage(ret.response.data.msg ? ret.response.data.msg : ret.response.data.status)
    return Promise.reject(ret.response.data)
 
 })
+axios.interceptors.request.use(
+    config => {
+        if(store.getters.exp<Date.now() && router.currentRoute.value.path!='/login'){
+            localRemove('token')
+            config.headers['token']=''
+            store.commit("setToken",'')
+            const controller = new AbortController();
+            const cfg = {
+                ...config,
+                signal: controller.signal,
+            };
+            controller.abort('We gotta cancel this');
+            router.push('/login')
+            return cfg
+        }else{
+            return config
+        }
 
+    },
+    error => {
+        // do something with request error
+        console.log(error) // for debug
+        return Promise.reject(error)
+    }
+)
 export default axios

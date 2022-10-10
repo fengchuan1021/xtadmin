@@ -9,11 +9,13 @@ const store = createStore({
         is_guest:true,
         nickname:'',
         allowmenus:[],
+        exp:0,
         token:'',
     },
     mutations: {
         setNewObj(state,newobj) {
             Object.assign(state,newobj)
+            state.exp=state.exp*1000
         },
         setAllowMenus(state,newmenus){
             state.allowmenus=newmenus
@@ -28,6 +30,7 @@ const store = createStore({
         is_guest:state=>state.is_guest,
         allowmenus:state=>state.allowmenus,
         token:state=>state.token,
+        exp:state=>state.exp,
     }
 })
 

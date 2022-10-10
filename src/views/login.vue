@@ -45,10 +45,12 @@ const onLogin=()=>{
         username: formdata.username || '',
         password: formdata.password
       }).then(ret => {
+        console.log('ret:',ret)
         if (ret.token){
           axios.defaults.headers['token']=ret.token
           store.commit('setToken',ret.token)
           store.commit('setNewObj',jwt_decode(ret.token))
+          console.log('decoe:',jwt_decode(ret.token))
           localSet('token', ret.token)
           if (ret.refreshtoken){
 
