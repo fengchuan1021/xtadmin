@@ -1,4 +1,5 @@
 <template>
+  <ImageGally ref="imagegally"></ImageGally>
   <el-card>
 
 
@@ -44,6 +45,7 @@
           title:<el-input v-model="subproduct.productname_en"></el-input>
           price:<el-input v-model="subproduct.price"></el-input>
           stock:<el-input v-model="subproduct.stock"></el-input>
+         <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="imagegally.show()"></IconCardImage></div>
         </div>
       </div>
     </el-form-item>
@@ -80,22 +82,31 @@
       </div>
     </el-form-item>
     <el-form-item label="prodduct description:">
-      <el-input v-model="product.productDescription_en"></el-input>
     </el-form-item>
 
-    <el-button @click="saveproduct">save</el-button>
+
   </el-form>
-
-
+    <el-form>
+    <QuillEditor theme="snow"  toolbar="full" />
+    </el-form>
+    <el-form-item>
+      <el-button @click="saveproduct">save</el-button>
+    </el-form-item>
   </el-card>
 </template>
 
 <script setup>
 
-import {onMounted, reactive, watch} from 'vue'
+import {onMounted, reactive, watch,ref} from 'vue'
 import IconDelete20Filled from '~icons/fluent/delete-20-filled';
 import IconAddIcon from '~icons/carbon/add';
+import IconCardImage from '~icons/bi/card-image';
+import ImageGally from './imagegally.vue'
 import axios from '@/utils/axios'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
+const imagegally=ref()
 const product=reactive({"specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
 
 const calcDescartes=(array)=>{

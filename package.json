@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.9",
+    "@vueup/vue-quill": "^1.0.0-beta.10",
     "axios": "^0.27.2",
     "element-plus": "^2.2.17",
     "jwt-decode": "^3.1.2",
@@ -21,6 +22,8 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@iconify-json/akar-icons": "^1.1.8",
+    "@iconify-json/bi": "^1.1.8",
     "@iconify-json/carbon": "^1.1.8",
     "@iconify-json/fluent": "^1.1.16",
     "@iconify-json/mdi": "^1.1.33",

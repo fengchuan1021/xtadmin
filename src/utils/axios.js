@@ -6,7 +6,7 @@ import store from '@/store'
 
 
 // 这边由于后端没有区分测试和正式，姑且都写成一个接口。
-axios.defaults.baseURL =import.meta.env.APP_BASE_URL || '/api'
+axios.defaults.baseURL =import.meta.env.VITE_BASE_URL || '/api'
 
 // 携带 cookie，对目前的项目没有什么作用，因为我们是 token 鉴权
 axios.defaults.withCredentials = true
