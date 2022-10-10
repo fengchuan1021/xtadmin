@@ -24,7 +24,7 @@ const router=useRouter()
 const logout=()=>{
   localRemove('token')
   store.commit('setToken','')
-  router.push('/')
+  router.push('/login')
 }
 </script>
 <style scoped>
