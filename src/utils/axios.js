@@ -25,6 +25,7 @@ axios.interceptors.response.use(res => {
     if(ret.name && ret.name=='CanceledError'){
         return Promise.resolve({'status':'failed','msg':"token expired"})
     }
+    console.log(ret)
    ElMessage(ret.response.data.msg ? ret.response.data.msg : ret.response.data.status)
    return Promise.reject(ret.response.data)
 

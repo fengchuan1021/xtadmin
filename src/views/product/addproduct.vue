@@ -87,7 +87,7 @@
 
   </el-form>
     <el-form>
-    <QuillEditor theme="snow"  toolbar="full" />
+      <Editor id="myeditor" @showImageGally="showImageGally"></Editor>
     </el-form>
     <el-form-item>
       <el-button @click="saveproduct">save</el-button>
@@ -103,12 +103,13 @@ import IconAddIcon from '~icons/carbon/add';
 import IconCardImage from '~icons/bi/card-image';
 import ImageGally from './imagegally.vue'
 import axios from '@/utils/axios'
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
-
+import Editor from './myeditor.vue'
 const imagegally=ref()
 const product=reactive({"specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
-
+const showImageGally=(flag)=>{
+  console.log("whay?",flag)
+  imagegally.value.show()
+}
 const calcDescartes=(array)=>{
   if (array.length < 2) return array[0] || [];
 
