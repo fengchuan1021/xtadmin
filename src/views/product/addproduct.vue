@@ -1,5 +1,5 @@
 <template>
-  <ImageGally ref="imagegally"></ImageGally>
+  <ImageGally ref="imagegally" :OnOkclick="ImageGallyCallback" :product_id="product.product_id"></ImageGally>
   <el-card>
 
 
@@ -87,7 +87,7 @@
 
   </el-form>
     <el-form>
-      <Editor id="myeditor" @showImageGally="showImageGally"></Editor>
+      <Editor id="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
     </el-form>
     <el-form-item>
       <el-button @click="saveproduct">save</el-button>
@@ -105,11 +105,21 @@ import ImageGally from './imagegally.vue'
 import axios from '@/utils/axios'
 import Editor from './myeditor.vue'
 const imagegally=ref()
-const product=reactive({"specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
+const product=reactive({'product_id':null,  "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
 const showImageGally=(flag)=>{
   console.log("whay?",flag)
   imagegally.value.show()
 }
+const ImageGallyCallback=ref(null)
+const ttt=()=>{
+  console.log("heeare")
+}
+ImageGallyCallback.value=ttt;
+const setImageGallyCallback=(fn)=>{
+  console.log('setcallback')
+  ImageGallyCallback.value=fn;
+}
+
 const calcDescartes=(array)=>{
   if (array.length < 2) return array[0] || [];
 
@@ -146,7 +156,11 @@ const deleteattribute=(index)=>{
 }
 
 onMounted(()=>{
-
+  axios.get('/backend/product/prefetchproductid').then(ret=>{
+    if(ret.status=='success'){
+      product.product_id=ret.product_id
+    }
+  })
 })
 
 // eslint-disable-next-line

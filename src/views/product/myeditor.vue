@@ -1,28 +1,56 @@
 <template>
-  <div>
-    <h1>Vue Example</h1>
+  <div id="standalone-container">
+    <div id="toolbar-container">
+    <span class="ql-formats">
+      <select class="ql-font"></select>
+      <select class="ql-size"></select>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-bold"></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-strike"></button>
+    </span>
+      <span class="ql-formats">
+      <select class="ql-color"></select>
+      <select class="ql-background"></select>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-script" value="sub"></button>
+      <button class="ql-script" value="super"></button>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-header" value="1"></button>
+      <button class="ql-header" value="2"></button>
+      <button class="ql-blockquote"></button>
+      <button class="ql-code-block"></button>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-list" value="ordered"></button>
+      <button class="ql-list" value="bullet"></button>
+      <button class="ql-indent" value="-1"></button>
+      <button class="ql-indent" value="+1"></button>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-direction" value="rtl"></button>
+      <select class="ql-align"></select>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-link"></button>
+      <button class="ql-image"></button>
+      <button class="ql-video"></button>
+      <button class="ql-formula"></button>
+    </span>
+      <span class="ql-formats">
+      <button class="ql-clean"></button>
+    </span>
+    </div>
     <div id="editor-container"></div>
-
-    <div>
-      <h4>Preview image from BLOB URL:</h4>
-      <img v-if="blobUrl" :src="blobUrl" alt="preview blob" />
-    </div>
-
-    <hr />
-
-    <div>
-      <h4>Get file infomation from File Object:</h4>
-      <div v-if="image.file">
-        <b>name:</b> <span>{{image.file.name}}</span> <br />
-        <b>size:</b> <span>{{image.file.size}}</span> <br />
-        <b>type:</b> <span>{{image.file.type}}</span>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onMounted } from 'vue'
+import { defineComponent, ref, reactive, onMounted,toRef } from 'vue'
 import Quill from 'quill'
 import axios from '@/utils/axios'
 import QuillImageDropAndPaste, { ImageData } from 'quill-image-drop-and-paste'
@@ -30,9 +58,14 @@ const Delta = Quill.import('delta')
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 export default defineComponent({
   name: 'Editor',
+  props: {
+    product_id: String
+
+  },
   setup: (props,context) => {
     const quill = ref(null)
     const blobUrl = ref(null)
+    const product_id=toRef(props,'product_id')
    //const imghost=ref('')
     const image = reactive({
       type: '', // image's mimeType
@@ -47,12 +80,27 @@ export default defineComponent({
         return false
       }
     }
+    const onimgselected=(imgurls)=>{
+      console.log('imge selected!!!')
+      if(imgurls.length > 0){
+        for(let i=0;i<imgurls.length;i++){
+          let index = (quill.value.getSelection() || {}).index;
+
+          if (index === undefined || index < 0) index = quill.value.getLength();
+          console.log('index',index)
+          console.log('length:',quill.value.getLength())
+          quill.value.insertEmbed(index, 'image', imgurls[i], 'user')
+        }
+      }
+    }
     const imageHandler = (dataUrl, type, imageData) => {
       //const blob = imageData.toBlob()
       const file = imageData.toFile()
       const formData = new FormData()
       formData.append('file', file)
-      axios.post('/uploadimg',formData).then(ret=>{
+      console.log('props:',props)
+      console.log('product:',product_id)
+      axios.post("/backend/product/addproductimg?product_id="+product_id.value,formData).then(ret=>{
         if(ret.status=='success'){
           let index = (quill.value.getSelection() || {}).index;
           if (index === undefined || index < 0) index = quill.value.getLength();
@@ -72,7 +120,7 @@ export default defineComponent({
 
       quill.value = new Quill('#editor-container', {
         modules: {
-          toolbar: [['bold', 'italic'], ['link', 'image']],
+          toolbar:'#toolbar-container',
           imageDropAndPaste: {
             handler: imageHandler
           },
@@ -92,8 +140,10 @@ export default defineComponent({
           .addHandler('image', function (clicked) {
             if (clicked) {
 
-              console.log('props:',props)
+
               context.emit("showImageGally",true)
+              context.emit("setImageGallyCallback",onimgselected)
+
               console.log('clicked')
             }
           });
@@ -102,6 +152,7 @@ export default defineComponent({
       quill,
       image,
       blobUrl,
+      product_id,
     }
   },
 })
