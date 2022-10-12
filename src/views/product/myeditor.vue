@@ -64,15 +64,7 @@ export default defineComponent({
   },
   setup: (props,context) => {
     const quill = ref(null)
-    const blobUrl = ref(null)
     const product_id=toRef(props,'product_id')
-   //const imghost=ref('')
-    const image = reactive({
-      type: '', // image's mimeType
-      dataUrl: null, // image's base64 string
-      blob: null, // image's BLOB object
-      file: null, // image's File object
-    })
     const isUrl = (str) => {
       try {
         return Boolean(new URL(str))
@@ -87,24 +79,31 @@ export default defineComponent({
           let index = (quill.value.getSelection() || {}).index;
 
           if (index === undefined || index < 0) index = quill.value.getLength();
-          console.log('index',index)
-          console.log('length:',quill.value.getLength())
+
           quill.value.insertEmbed(index, 'image', imgurls[i], 'user')
+
         }
       }
     }
     const imageHandler = (dataUrl, type, imageData) => {
-      //const blob = imageData.toBlob()
+
       const file = imageData.toFile()
       const formData = new FormData()
       formData.append('file', file)
-      console.log('props:',props)
-      console.log('product:',product_id)
       axios.post("/backend/product/addproductimg?product_id="+product_id.value,formData).then(ret=>{
         if(ret.status=='success'){
-          let index = (quill.value.getSelection() || {}).index;
+          let index = (quill.value.getSelection(true) || {}).index;
           if (index === undefined || index < 0) index = quill.value.getLength();
-          quill.value.insertEmbed(index, 'image', ret.fileurl, 'user')
+          console.log('index;',index)
+
+          quill.value.insertEmbed(index,'image', ret.fileurl, 'user')
+          quill.value.insertText(index+1,'\n')
+          //quill.value.insertText(index,"helloworl")
+          quill.value.setSelection(index+2)
+
+         // quill.value.updateContents(new Delta().retain(index).insert({ image: ret.fileurl, attributes: {
+         //     link: 'https://quilljs.com'
+         //   }}).insert('\n'))
         }
       })
     }
@@ -127,7 +126,7 @@ export default defineComponent({
           clipboard: {
             matchers: [
               // your custom paste handler
-              [Node.TEXT_NODE, (node, delta) => textPasteHander(node.data, delta)],
+             // [Node.TEXT_NODE, (node, delta) => textPasteHander(node.data, delta)],
             ]
           }
         },
@@ -135,24 +134,22 @@ export default defineComponent({
         readOnly: false,
         theme: 'snow'
       })
-      quill.value
-          .getModule('toolbar')
-          .addHandler('image', function (clicked) {
-            if (clicked) {
-
-
-              context.emit("showImageGally",true)
-              context.emit("setImageGallyCallback",onimgselected)
-
-              console.log('clicked')
-            }
-          });
+      // quill.value
+      //     .getModule('toolbar')
+      //     .addHandler('image', function (clicked) {
+      //       if (clicked) {
+      //
+      //
+      //         context.emit("showImageGally",true)
+      //         context.emit("setImageGallyCallback",onimgselected)
+      //
+      //         console.log('clicked')
+      //       }
+      //     });
     })
     return {
       quill,
-      image,
-      blobUrl,
-      product_id,
+      product_id
     }
   },
 })
