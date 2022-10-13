@@ -6,7 +6,7 @@
   <el-form>
 
     <el-form-item label="prodduct name:">
-      <el-input v-model="product.productname_en"></el-input>
+      <el-input v-model="product.name_en"></el-input>
     </el-form-item>
 
     <el-form-item label="add Specification:">
@@ -40,14 +40,25 @@
     </el-form-item>
 
     <el-form-item>
+
       <div class="subproductdiv">
-        <div v-for="(subproduct,index) in product.subproduct" :key="index" style="display:flex;">
-          title:<el-input v-model="subproduct.productname_en"></el-input>
+        <div v-for="(subproduct,subindex) in product.subproduct" :key="subindex" style="display:flex;flex-direction:column">
+          <div style="display:flex">
+          title:<el-input v-model="subproduct.name_en"></el-input>
           price:<el-input v-model="subproduct.price"></el-input>
           stock:<el-input v-model="subproduct.stock"></el-input>
-         <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="imagegally.show()"></IconCardImage></div>
+         <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="addvariantimg(subproduct,subindex)"></IconCardImage></div>
+          </div>
+
+          <div class="variantimg" style="display:flex">
+            <div v-for="(img,imgindex) in subproduct.imgs" :key="imgindex">
+              <el-image :src="img.img_url"></el-image>
+            </div>
+          </div>
+
         </div>
       </div>
+
     </el-form-item>
 
     <el-form-item label="add variant:">
@@ -87,7 +98,7 @@
 
   </el-form>
     <el-form>
-      <Editor id="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
+      <Editor ref="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
     </el-form>
     <el-form-item>
       <el-button @click="saveproduct">save</el-button>
@@ -105,10 +116,20 @@ import ImageGally from './imagegally.vue'
 import axios from '@/utils/axios'
 import Editor from './myeditor.vue'
 const imagegally=ref()
+const myeditor=ref()
 const product=reactive({'product_id':null,  "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
 const showImageGally=(flag)=>{
   console.log("whay?",flag)
   imagegally.value.show()
+}
+const addvariantimg=(subproduct,subindex)=>{
+  setImageGallyCallback((imglist)=>{
+    console.log('imglist:',imglist)
+    console.log(imglist.map(t=>{return {'img_url':t,'img_alt':''} }))
+    subproduct.imgs=subproduct.imgs.concat(imglist.map(t=>{return {'img_url':t,'img_alt':''} }))}
+  );
+
+  imagegally.value.show();
 }
 const ImageGallyCallback=ref(null)
 const ttt=()=>{
@@ -143,7 +164,7 @@ watch(product.specifications,()=>{
   let tmp=calcDescartes(arr)
   product.subproduct=[]
   tmp.forEach(item=>{
-    let subproduct={"productname_en":product.productname_en+'-'+item,price:0,stock:0}
+    let subproduct={"name_en":product.name_en+'-'+item,price:0,stock:0,'imgs':[]}
     product.subproduct.push(subproduct)
 
   })
@@ -205,7 +226,8 @@ const addattribute=()=>{
 
 
 const saveproduct=()=>{
-  axios.post('/backend/product/addproduct',{product}).then(ret=>{
+  product.description_en=myeditor.value.getContent()
+  axios.post('/backend/product/addproduct',product).then(ret=>{
     console.log('product',ret)
   })
 }

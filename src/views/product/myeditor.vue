@@ -37,9 +37,17 @@ let config={
     });
   }
 }
+const getContent=()=>{
+  return editorref.value.getContent();
+}
 onMounted(()=>{
   // tinymce.init({
   //   selector: '#mytextarea'
   // });
 })
+defineExpose({
+  getContent,
+
+    }
+)
 </script>
