@@ -48,7 +48,7 @@ let warehouseform=reactive({show:false,warehouse_name:'',warehouse_mark:''})
 const onAddsite=()=>{
   axios.post('/backend/site/addsite',form).then(ret=>{
     if(ret.status=='success'){
-      ElMessage.success('添加商店成功')
+      ElMessage.success('add site successfully')
     }
   })
 }
