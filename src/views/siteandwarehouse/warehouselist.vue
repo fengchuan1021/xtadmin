@@ -62,7 +62,7 @@ const onSearch=()=>{
   getdata()
 }
 const onDelWarehouse=(warehouse_id,rowindex)=>{
-  axios.post('/backend/shop/delwarehouse',{warehouse_id}).then(ret=>{
+  axios.post('/backend/site/delwarehouse',{warehouse_id}).then(ret=>{
     if(ret.status=='success'){
       ElMessage.success("delete warehouse successfully")
       data.value.splice(rowindex,1)
@@ -73,7 +73,7 @@ const onedit=(row)=>{
   warehousedlg.value.edit(row)
 }
 const getdata=()=>{
-  axios.post("/backend/shop/warehouselist",state).then(ret=>{
+  axios.post("/backend/site/warehouselist",state).then(ret=>{
     if (ret.status=='success'){
       data.value=ret.data
       state.total=0

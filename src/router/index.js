@@ -42,25 +42,25 @@ let routes=[
 
 
             {
-                path:'/shopandwarehouse',
-                redirect:'/shopandwarehouse/shoplist',
-                meta: { title: 'shop & warehouse'},
+                path:'/siteandwarehouse',
+                redirect:'/siteandwarehouse/sitelist',
+                meta: { title: 'site & warehouse'},
                 children:[
                     {
-                        path:'/shopandwarehouse/shoplist',
-                        meta: { title: 'shop list'},
-                        component: () => import('../views/shopandwarehouse/shoplist.vue'),
+                        path:'/siteandwarehouse/sitelist',
+                        meta: { title: 'site list'},
+                        component: () => import('../views/siteandwarehouse/sitelist.vue'),
 
                     },
                     {
-                        path:'/shopandwarehouse/addshop',
-                        meta: { title: 'add shop'},
-                        component: () => import('../views/shopandwarehouse/addshop.vue'),
+                        path:'/siteandwarehouse/addsite',
+                        meta: { title: 'add site'},
+                        component: () => import('../views/siteandwarehouse/addsite.vue'),
                     },
                     {
-                        path:'/shopandwarehouse/warehouselist',
+                        path:'/siteandwarehouse/warehouselist',
                         meta: { title: 'ware house'},
-                        component: () => import('../views/shopandwarehouse/warehouselist.vue'),
+                        component: () => import('../views/siteandwarehouse/warehouselist.vue'),
                     },
 
                 ]

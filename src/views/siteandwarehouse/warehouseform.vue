@@ -43,7 +43,7 @@ const edit=(row)=>{
 
 }
 const doaddupdatewarehouse=()=>{
-  let url=warehouse_data.warehouse_id ? '/backend/shop/editwarehouse' : '/backend/shop/addwarehouse'
+  let url=warehouse_data.warehouse_id ? '/backend/site/editwarehouse' : '/backend/site/addwarehouse'
   axios.post(url,warehouse_data).then(ret=>{
     if(ret.status=='success'){
       ElMessage.success('add warehouse success')

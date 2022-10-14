@@ -12,8 +12,8 @@
   </el-dialog>
   <el-card>
     <el-form>
-      <el-form-item label="shopname:">
-        <el-input v-model="form.shop_name"></el-input>
+      <el-form-item label="sitename:">
+        <el-input v-model="form.site_name"></el-input>
       </el-form-item>
       <el-form-item label="binded warehouse:">
         <el-select v-model="form.warehouse_id">
@@ -21,7 +21,7 @@
         </el-select>
         <el-button @click="warehouseform.show=1">add new warehouse</el-button>
       </el-form-item>
-      <el-button @click="onAddshop">add shop</el-button>
+      <el-button @click="onAddsite">add site</el-button>
     </el-form>
   </el-card>
 </template>
@@ -29,7 +29,7 @@
 import axios from '@/utils/axios'
 import {ref,reactive,onMounted,watch} from 'vue'
 const warehouses=ref([])
-let form=reactive({shop_name:'',warehouse_id:'',warehouse_name:''})
+let form=reactive({site_name:'',warehouse_id:'',warehouse_name:''})
 
 watch(()=>form.warehouse_id,()=>{
   for(let i=0;i<warehouses.value.length;i++){
@@ -42,15 +42,15 @@ watch(()=>form.warehouse_id,()=>{
 })
 
 let warehouseform=reactive({show:false,warehouse_name:'',warehouse_mark:''})
-const onAddshop=()=>{
-  axios.post('/backend/shop/addshop',form).then(ret=>{
+const onAddsite=()=>{
+  axios.post('/backend/site/addsite',form).then(ret=>{
     if(ret.status=='success'){
       ElMessage.success('添加商店成功')
     }
   })
 }
 const doaddwarehouse=()=>{
-  axios.post('/backend/shop/addwarehouse',warehouseform).then(ret=>{
+  axios.post('/backend/site/addwarehouse',warehouseform).then(ret=>{
     if(ret.status=='success'){
       ElMessage.success('add warehouse success')
       warehouseform.show=false
@@ -59,7 +59,7 @@ const doaddwarehouse=()=>{
   })
 }
 const getwarehoseList=()=>{
-  axios.post('/backend/shop/warehouselist').then(ret=>{
+  axios.post('/backend/site/warehouselist').then(ret=>{
     warehouses.value=ret.data
   })
 }

@@ -24,8 +24,8 @@
 
     <el-table :data="data" style="width: 100%">
 
-      <el-table-column prop="shop_id" label="shop_id"  />
-      <el-table-column prop="shop_name" label="shop_name"  />
+      <el-table-column prop="site_id" label="site_id"  />
+      <el-table-column prop="site_name" label="site_name"  />
       <el-table-column prop="warehouse_name" label="warehouse_name" />
     </el-table>
 
@@ -52,7 +52,7 @@ const onSearch=()=>{
   getdata()
 }
 const getdata=()=>{
-  axios.post("/backend/shop/shoplist",state).then(ret=>{
+  axios.post("/backend/site/sitelist",state).then(ret=>{
     if (ret.status=='success'){
       data.value=ret.data
       state.total=0
