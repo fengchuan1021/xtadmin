@@ -97,6 +97,11 @@ let routes=[
                         meta: { title: 'predefine attr & specification'},
                         component: () => import('../views/product/predefineattrspec.vue'),
                     },
+                    {
+                        path:'/product/brandlist',
+                        meta: { title: 'brand'},
+                        component: () => import('../views/product/brandlist.vue'),
+                    },
                 ]
             },
             {

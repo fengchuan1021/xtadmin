@@ -8,6 +8,21 @@
     <el-form-item label="prodduct name:">
       <el-input v-model="product.name_en"></el-input>
     </el-form-item>
+    <el-form-item label="prodduct sku:">
+      <el-input v-model="product.sku"></el-input>
+    </el-form-item>
+
+    <el-form-item label="brand:">
+      <el-select v-model="product.brand_id" filterable placeholder="Select a brand">
+        <el-option
+            v-for="item in allbrands"
+            :key="item.id"
+            :label="item.brand_en"
+            :value="item.id"
+        />
+      </el-select>
+
+    </el-form-item>
 
     <el-form-item label="add Specification:">
       <div class="specificationdiv">
@@ -118,6 +133,8 @@ import Editor from './myeditor.vue'
 const imagegally=ref()
 const myeditor=ref()
 const product=reactive({'product_id':null,  "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
+const allbrands=ref([])
+
 const showImageGally=(flag)=>{
   console.log("whay?",flag)
   imagegally.value.show()
@@ -180,6 +197,11 @@ onMounted(()=>{
   axios.get('/backend/product/prefetchproductid').then(ret=>{
     if(ret.status=='success'){
       product.product_id=ret.product_id
+    }
+  })
+  axios.get('/backend/product/brandlist').then(ret=>{
+    if(ret.status=='success'){
+      allbrands.value=ret.data
     }
   })
 })

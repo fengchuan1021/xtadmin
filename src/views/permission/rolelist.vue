@@ -4,7 +4,7 @@
       <el-form-item label="role name:"  prop="role_name">
         <el-input v-model="addform.data.role_name"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item >
         <el-button @click="onAddrole">add role</el-button>
       </el-form-item>
     </el-form>
@@ -12,7 +12,7 @@
 
   <el-card class="container">
     <template #header>
-    <el-form>
+    <el-form inline>
       <el-form-item>
         <el-button @click="addform.showflag=1">add role</el-button>
       </el-form-item>
