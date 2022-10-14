@@ -15,6 +15,9 @@
       <el-form-item label="sitename:">
         <el-input v-model="form.site_name"></el-input>
       </el-form-item>
+      <el-form-item label="sitedomain:">
+        <el-input v-model="form.domainname"></el-input>
+      </el-form-item>
       <el-form-item label="binded warehouse:">
         <el-select v-model="form.warehouse_id">
           <el-option v-for="(warehouse,index) in warehouses" :key="index" :value="warehouse.warehouse_id" :label="warehouse.warehouse_name"></el-option>

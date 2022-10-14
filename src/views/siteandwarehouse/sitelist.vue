@@ -26,6 +26,7 @@
 
       <el-table-column prop="site_id" label="site_id"  />
       <el-table-column prop="site_name" label="site_name"  />
+      <el-table-column prop="domainname" label="domainname"  />
       <el-table-column prop="warehouse_name" label="warehouse_name" />
     </el-table>
 
