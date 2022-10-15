@@ -1,4 +1,29 @@
 <template>
+  <el-dialog
+  ref="addcategory"
+  v-model="showcategorydlg"
+  >
+    <el-tree
+        ref="categorytree"
+        show-checkbox
+        :data="allcategory"
+        :props="{
+          children: 'children',
+          label: 'category_name',
+        }"
+        node-key="category_id"
+        default-expand-all
+
+    >
+      <template #default="{ node, data }">
+        <span class="custom-tree-node">
+          <span>{{ node.label }}</span>
+
+        </span>
+      </template>
+    </el-tree>
+    <el-button @click="onAddcategory">ok</el-button>
+  </el-dialog>
   <ImageGally ref="imagegally" :OnOkclick="ImageGallyCallback" :product_id="product.product_id"></ImageGally>
   <el-card>
 
@@ -16,12 +41,19 @@
       <el-select v-model="product.brand_id" filterable placeholder="Select a brand">
         <el-option
             v-for="item in allbrands"
-            :key="item.id"
+            :key="item.brand_id"
             :label="item.brand_en"
-            :value="item.id"
+            :value="item.brand_id"
         />
       </el-select>
 
+    </el-form-item>
+
+    <el-form-item label="category:">
+      <el-tag type="success" v-for="(item,k) in chosedcategory" :key="k">{{item.category_name}}</el-tag>
+      <el-button  size="small" @click="showcategorydlg=true">
+        + edit
+      </el-button>
     </el-form-item>
 
     <el-form-item label="add Specification:">
@@ -107,17 +139,26 @@
         </div>
       </div>
     </el-form-item>
+    <el-form-item>
+      <div>product image:<IconCardImage @click="addproductimg"></IconCardImage></div>
+    </el-form-item>
+
+    <el-form-item>
+      <div>product video:<IconCardImage @click="addproductvideo"></IconCardImage></div>
+    </el-form-item>
+
+
     <el-form-item label="prodduct description:">
     </el-form-item>
 
+    <Editor ref="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
 
-  </el-form>
-    <el-form>
-      <Editor ref="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
-    </el-form>
     <el-form-item>
       <el-button @click="saveproduct">save</el-button>
     </el-form-item>
+  </el-form>
+
+
   </el-card>
 </template>
 
@@ -132,12 +173,22 @@ import axios from '@/utils/axios'
 import Editor from './myeditor.vue'
 const imagegally=ref()
 const myeditor=ref()
-const product=reactive({'product_id':null,  "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
+const product=reactive({'product_id':null, 'category':[], "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
 const allbrands=ref([])
-
+const allcategory=ref([])
+const showcategorydlg=ref(false)
+const categorytree=ref()
+const chosedcategory=ref([])
 const showImageGally=(flag)=>{
   console.log("whay?",flag)
   imagegally.value.show()
+}
+const onAddcategory=()=>{
+  let nodes=categorytree.value.getCheckedNodes(true)
+  console.log('nodes:',nodes)
+  chosedcategory.value=nodes.map((i)=>{return {'category_id':i.category_id,'category_name':i.category_name}})
+  product.category=chosedcategory.value.map(item=>item.category_id)
+
 }
 const addvariantimg=(subproduct,subindex)=>{
   setImageGallyCallback((imglist)=>{
@@ -199,9 +250,14 @@ onMounted(()=>{
       product.product_id=ret.product_id
     }
   })
-  axios.get('/backend/product/brandlist').then(ret=>{
+  axios.post('/backend/product/brandlist',{pagenum:1,pagesize:10000}).then(ret=>{
     if(ret.status=='success'){
       allbrands.value=ret.data
+    }
+  })
+  axios.get('/backend/product/getcategorytree',{pagenum:1,pagesize:10000}).then(ret=>{
+    if(ret.status=='success'){
+      allcategory.value=ret.data
     }
   })
 })

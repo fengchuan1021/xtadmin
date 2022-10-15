@@ -13,6 +13,15 @@
     <el-table-column prop="email" label="email"  />
     <el-table-column prop="balance" label="balance" />
     <el-table-column prop="phone" label="phone" />
+    <el-table-column prop="userrole" label="perission" >
+      <template #default="scope">
+        <span><el-tag type="success">customer</el-tag></span>
+        <span v-for="(role,index) in roles" :key="index" >
+
+          <el-tag type="success" v-if="scope.row.userrole & role.id">{{role.role_name}}</el-tag>
+        </span>
+      </template>
+    </el-table-column>
   </el-table>
   <!--        结束表格-->
 
@@ -30,7 +39,9 @@
 </template>
 <script setup>
 import axios from '@/utils/axios'
+import {onMounted} from "vue";
 const data=ref([])
+const roles=ref([])
 let state=reactive({pagenum:1,pagesize:20,total:0,filter:{}})
 const getData=()=>{
  axios.post('/backend/user/userlist/',state).then(ret=>{
@@ -43,7 +54,16 @@ const getData=()=>{
 }
 onMounted(()=>{
   getData()
+  axios.get("/backend/permission/role/").then(ret=>{
+    if (ret.status=='success'){
+      roles.value=ret.roles;
+      console.log('roles;',roles.value)
+    }else{
+
+    }
+  })
 })
+
 </script>
 <style scoped>
 

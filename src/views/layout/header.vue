@@ -2,7 +2,7 @@
 
     <div style="display:flex;align-items: center;min-height:50px;">
       <div style="order:-1;margin-left:auto;margin-right:20px;display: flex;align-items: center;">
-          <span>fengchuan </span> <el-tooltip
+          <span>{{store.getters.username}} </span> <el-tooltip
 
             effect="dark"
             content="logout"
@@ -16,10 +16,10 @@
 import IconLogout from '~icons/carbon/logout'
 
 import {localRemove} from "../../utils/index.js";
-import store from '@/store';
+import { useStore } from 'vuex'
 import {useRouter} from 'vue-router'
 
-
+const store = useStore()
 const router=useRouter()
 const logout=()=>{
   localRemove('token')
