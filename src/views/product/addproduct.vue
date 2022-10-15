@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-  ref="addcategory"
-  v-model="showcategorydlg"
+      ref="addcategory"
+      v-model="showcategorydlg"
   >
     <el-tree
         ref="categorytree"
@@ -28,135 +28,162 @@
   <el-card>
 
 
-  <el-form>
+    <el-form>
 
-    <el-form-item label="prodduct name:">
-      <el-input v-model="product.name_en"></el-input>
-    </el-form-item>
-    <el-form-item label="prodduct sku:">
-      <el-input v-model="product.sku"></el-input>
-    </el-form-item>
+      <el-form-item label="prodduct name:">
+        <el-input v-model="product.name_en"></el-input>
+      </el-form-item>
+      <el-form-item label="prodduct sku:">
+        <el-input v-model="product.sku"></el-input>
+      </el-form-item>
 
-    <el-form-item label="brand:">
-      <el-select v-model="product.brand_id" filterable placeholder="Select a brand">
-        <el-option
-            v-for="item in allbrands"
-            :key="item.brand_id"
-            :label="item.brand_en"
-            :value="item.brand_id"
-        />
-      </el-select>
+      <el-form-item label="brand:">
+        <el-select v-model="product.brand_id" filterable placeholder="Select a brand">
+          <el-option
+              v-for="item in allbrands"
+              :key="item.brand_id"
+              :label="item.brand_en"
+              :value="item.brand_id"
+          />
+        </el-select>
 
-    </el-form-item>
+      </el-form-item>
 
-    <el-form-item label="category:">
-      <el-tag type="success" v-for="(item,k) in chosedcategory" :key="k">{{item.category_name}}</el-tag>
-      <el-button  size="small" @click="showcategorydlg=true">
-        + edit
-      </el-button>
-    </el-form-item>
+      <el-form-item>
+        <el-select v-model="product.status">
+          <el-option value="ONLINE">ONLINE</el-option>
+          <el-option value="OFFLINE">OFFLINE</el-option>
+          <el-option value="EDITING">EDITING</el-option>
+        </el-select>
+      </el-form-item>
 
-    <el-form-item label="add Specification:">
-      <div class="specificationdiv">
-        <div v-for="(specification,index) in product.specifications" :key="index">
-          <div><IconDelete20Filled @click="removeSpecification(index)"></IconDelete20Filled>specification name:
-            <el-autocomplete class="specificationname"
-                             v-model="specification.name"
-                             clearable
-                             placeholder="colour,volume,size,etc."
-                             :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'specification')"
-                             @select="(item)=>onspecificationselect(item,index)"
-            >
+      <el-form-item label="category:">
+        <el-tag type="success" v-for="(item,k) in chosedcategory" :key="k">{{item.category_name}}</el-tag>
+        <el-button  size="small" @click="showcategorydlg=true">
+          + edit
+        </el-button>
+      </el-form-item>
 
-            </el-autocomplete>
-            specification value:
-            <el-input class="specificationvalue" v-for="(v,index2) in specification.value" :key='index2' v-model="specification.value[index2]">
-              <template #suffix>
-                <IconDelete20Filled style='cursor:pointer' @click="removeSpecificationValue(index,index2)"/>
-              </template>
-            </el-input>
-            <el-icon :size="20" color="#409EFC">
-              <IconAddIcon @click="addSpecificationValue(specification)"/>
-            </el-icon>
-          </div>
-        </div>
-        <div>
-          <el-button @click="addSpecification">add Specification</el-button>
-        </div>
-      </div>
-    </el-form-item>
+      <el-form-item label="add Specification:">
+        <div class="specificationdiv">
+          <div v-for="(specification,index) in product.specifications" :key="index">
+            <div><IconDelete20Filled @click="removeSpecification(index)"></IconDelete20Filled>specification name:
+              <el-autocomplete class="specificationname"
+                               v-model="specification.name"
+                               clearable
+                               placeholder="colour,volume,size,etc."
+                               :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'specification')"
+                               @select="(item)=>onspecificationselect(item,index)"
+              >
 
-    <el-form-item>
-
-      <div class="subproductdiv">
-        <div v-for="(subproduct,subindex) in product.subproduct" :key="subindex" style="display:flex;flex-direction:column">
-          <div style="display:flex">
-          title:<el-input v-model="subproduct.name_en"></el-input>
-          price:<el-input v-model="subproduct.price"></el-input>
-          stock:<el-input v-model="subproduct.stock"></el-input>
-         <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="addvariantimg(subproduct,subindex)"></IconCardImage></div>
-          </div>
-
-          <div class="variantimg" style="display:flex">
-            <div v-for="(img,imgindex) in subproduct.imgs" :key="imgindex">
-              <el-image :src="img.img_url"></el-image>
+              </el-autocomplete>
+              specification value:
+              <el-input class="specificationvalue" v-for="(v,index2) in specification.value" :key='index2' v-model="specification.value[index2]">
+                <template #suffix>
+                  <IconDelete20Filled style='cursor:pointer' @click="removeSpecificationValue(index,index2)"/>
+                </template>
+              </el-input>
+              <el-icon :size="20" color="#409EFC">
+                <IconAddIcon @click="addSpecificationValue(specification)"/>
+              </el-icon>
             </div>
           </div>
-
-        </div>
-      </div>
-
-    </el-form-item>
-
-    <el-form-item label="add variant:">
-      <div style="display:flex;flex-direction:column">
-        <div>
-          <div v-for="(attribute,index) of product.attributes" :key="index" style="display:flex;">
-
-            <el-autocomplete class="attributenname"
-                             v-model="attribute.name"
-
-                             placeholder="attribute"
-                             :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'attribute')"
-                             @select="(item)=>onattributeselect(item,index)"
-            >
-
-            </el-autocomplete>
-
-            :
-            <el-autocomplete
-                v-model="attribute.value"
-                :fetch-suggestions="(a,b)=>attributetip(a,b,index)"
-
-                class="inline-input w-50"
-                placeholder="Please Input"
-            />
-           <IconDelete20Filled @click="deleteattribute(index)"></IconDelete20Filled>
+          <div>
+            <el-button @click="addSpecification">add Specification</el-button>
           </div>
         </div>
-        <div>
-          <el-button @click="addattribute">addattribute</el-button>
+      </el-form-item>
+
+      <el-form-item>
+
+        <div class="subproductdiv">
+          <div v-for="(subproduct,subindex) in product.subproduct" :key="subindex" style="display:flex;flex-direction:column">
+            <div style="display:flex">
+              title:<el-input v-model="subproduct.name_en"></el-input>
+              price:<el-input v-model="subproduct.price"></el-input>
+              stock:<el-input v-model="subproduct.stock"></el-input>
+              <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="addvariantimg(subproduct,subindex)"></IconCardImage></div>
+            </div>
+
+            <div class="variantimg" style="display:flex">
+              <div v-for="(img,imgindex) in subproduct.imgs" :key="imgindex">
+                <el-image :src="img.image_url"></el-image>
+              </div>
+            </div>
+
+          </div>
         </div>
-      </div>
-    </el-form-item>
-    <el-form-item>
-      <div>product image:<IconCardImage @click="addproductimg"></IconCardImage></div>
-    </el-form-item>
 
-    <el-form-item>
-      <div>product video:<IconCardImage @click="addproductvideo"></IconCardImage></div>
-    </el-form-item>
+      </el-form-item>
+
+      <el-form-item label="add variant:">
+        <div style="display:flex;flex-direction:column">
+          <div>
+            <div v-for="(attribute,index) of product.attributes" :key="index" style="display:flex;">
+
+              <el-autocomplete class="attributenname"
+                               v-model="attribute.name"
+
+                               placeholder="attribute"
+                               :fetch-suggestions="(queryString, cb)=>querySpecification(queryString, cb,index,'attribute')"
+                               @select="(item)=>onattributeselect(item,index)"
+              >
+
+              </el-autocomplete>
+
+              :
+              <el-autocomplete
+                  v-model="attribute.value"
+                  :fetch-suggestions="(a,b)=>attributetip(a,b,index)"
+
+                  class="inline-input w-50"
+                  placeholder="Please Input"
+              />
+              <IconDelete20Filled @click="deleteattribute(index)"></IconDelete20Filled>
+            </div>
+          </div>
+          <div>
+            <el-button @click="addattribute">addattribute</el-button>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item>
+        <div v-if="product.specifications.length">
+          <div><span >product main image:</span><IconCardImage @click="addproductimg"></IconCardImage></div>
+          <div v-if="product.image[0]">
+            <el-image :src="product.image[0].image_url"></el-image>
+          </div>
+
+        </div>
+
+        <div v-else>
+          <div><span >product images:</span><IconCardImage @click="addproductimg"></IconCardImage></div>
+          <div>
+            <el-image :src="img.image_url" v-for="img in product.image"></el-image>
+          </div>
+
+        </div>
 
 
-    <el-form-item label="prodduct description:">
-    </el-form-item>
+      </el-form-item>
 
-    <Editor ref="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
+      <el-form-item>
+        <div>product video:<IconCardImage @click="addproductvideo"></IconCardImage></div>
+        <div>
+          <el-image :src="product.video"></el-image>
+        </div>
+      </el-form-item>
 
-    <el-form-item>
-      <el-button @click="saveproduct">save</el-button>
-    </el-form-item>
-  </el-form>
+
+      <el-form-item label="prodduct description:">
+      </el-form-item>
+
+      <Editor ref="myeditor" @showImageGally="showImageGally" @setImageGallyCallback="setImageGallyCallback" :product_id="product.product_id"></Editor>
+
+      <el-form-item>
+        <el-button @click="saveproduct">save</el-button>
+      </el-form-item>
+    </el-form>
 
 
   </el-card>
@@ -173,7 +200,7 @@ import axios from '@/utils/axios'
 import Editor from './myeditor.vue'
 const imagegally=ref()
 const myeditor=ref()
-const product=reactive({'product_id':null, 'category':[], "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
+const product=reactive({'product_id':null, 'image':[], 'video':'' ,'category':[], "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
 const allbrands=ref([])
 const allcategory=ref([])
 const showcategorydlg=ref(false)
@@ -193,17 +220,33 @@ const onAddcategory=()=>{
 const addvariantimg=(subproduct,subindex)=>{
   setImageGallyCallback((imglist)=>{
     console.log('imglist:',imglist)
-    console.log(imglist.map(t=>{return {'img_url':t,'img_alt':''} }))
-    subproduct.imgs=subproduct.imgs.concat(imglist.map(t=>{return {'img_url':t,'img_alt':''} }))}
+    console.log(imglist.map(t=>{return {'image_url':t,'image_alt':''} }))
+    subproduct.imgs=subproduct.imgs.concat(imglist.map(t=>{return {'image_url':t,'image_alt':''} }))}
   );
 
   imagegally.value.show();
 }
-const ImageGallyCallback=ref(null)
-const ttt=()=>{
-  console.log("heeare")
+const addproductimg=()=>{
+  setImageGallyCallback((imglist)=>{
+        if(product.specifications.length){
+          product.image=[{image_url:imglist[0],'image_alt':''}]
+        }else{
+          product.image=product.image.concat(imglist.map(t=>{return {'image_url':t,'image_alt':''} }))
+        }
+      }
+  );
+  imagegally.value.show();
 }
-ImageGallyCallback.value=ttt;
+const addproductvideo=()=>{
+  setImageGallyCallback((imglist)=>{
+        product.video=imglist[0]
+      }
+  );
+  imagegally.value.show();
+}
+const ImageGallyCallback=ref(null)
+const test=()=>{}
+ImageGallyCallback.value=test;
 const setImageGallyCallback=(fn)=>{
   console.log('setcallback')
   ImageGallyCallback.value=fn;
@@ -237,6 +280,9 @@ watch(product.specifications,()=>{
 
   })
 });
+watch(product.brand_id,()=>{
+  product.brand_en=allbrands.value.filter(item=>item.brand_id=brand_id)[0].brand_en
+})
 const addSpecification=()=>{
   product.specifications.push({'name':"",'value':[]})
 }

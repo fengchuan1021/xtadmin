@@ -61,7 +61,7 @@ const prop=defineProps({
   OnOkclick:{type:Function,required:false,default:null},
   product_id:{type:String,required:true}
 })
-const showdlg=ref(true)
+const showdlg=ref(false)
 const product_id = toRef(prop, 'product_id')
 console.log('product_id',product_id.value)
 const show=()=>{
