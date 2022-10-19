@@ -1,4 +1,6 @@
 <template>
+  <el-dialog></el-dialog>
+<VariantSitedetail ref="variantdetail"></VariantSitedetail>
   <el-card class="container">
 
     <template #header>
@@ -23,10 +25,23 @@
 
 
     <el-table :data="data" style="width: 100%">
+<!--      <el-table-column type="expand">-->
+<!--        <template #default="scope">-->
+<!--          <el-table :data="scope.row.detaildata">-->
+<!--            <el-table-column prop="name_en" label="name_en"></el-table-column>-->
+<!--            <el-table-column prop="ensite" label="ensite"></el-table-column>-->
 
+<!--          </el-table>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column prop="product_id" label="product_id"  />
       <el-table-column prop="name_en" label="name_en"  />
       <el-table-column prop="brand" label="brand"  />
+      <el-table-column prop="brand" label=""  >
+        <template #default="scope">
+          <el-button @click="detail(scope.row.product_id)">detail</el-button>
+        </template>
+      </el-table-column>
 
     </el-table>
 
@@ -45,12 +60,15 @@
 <script setup>
 import axios from '@/utils/axios'
 import {onMounted, reactive,ref} from 'vue'
-
-
+import VariantSitedetail from './variantsitepricedetail.vue'
+const variantdetail=ref()
 let state=reactive({pagenum:1,pagesize:2,filter:{},total:0})
 let data=ref([])
 const onSearch=()=>{
   getdata()
+}
+const detail=(product_id)=>{
+  variantdetail.value.show(product_id)
 }
 const getdata=()=>{
   axios.post("/backend/product/productlist",state).then(ret=>{
@@ -64,6 +82,7 @@ const getdata=()=>{
 }
 onMounted(()=>{
   getdata()
+  variantdetail.value.show('87305569047680067')
 })
 
 </script>

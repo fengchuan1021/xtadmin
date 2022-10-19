@@ -101,12 +101,12 @@
             <div style="display:flex">
               title:<el-input v-model="subproduct.name_en"></el-input>
               price:<el-input v-model="subproduct.price"></el-input>
-              stock:<el-input v-model="subproduct.stock"></el-input>
+              sku:<el-input v-model="subproduct.sku"></el-input>
               <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="addvariantimg(subproduct,subindex)"></IconCardImage></div>
             </div>
 
             <div class="variantimg" style="display:flex">
-              <div v-for="(img,imgindex) in subproduct.imgs" :key="imgindex">
+              <div v-for="(img,imgindex) in subproduct.image" :key="imgindex">
                 <el-image :src="img.image_url"></el-image>
               </div>
             </div>
@@ -200,7 +200,7 @@ import axios from '@/utils/axios'
 import Editor from './myeditor.vue'
 const imagegally=ref()
 const myeditor=ref()
-const product=reactive({'product_id':null, 'image':[], 'video':'' ,'category':[], "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'',stock:0,'subproduct':[],price:0,'attributes':[]})
+const product=reactive({'product_id':null, 'image':[], 'video':'' ,'category':[], "specifications":[],'name_en':'','description_en':'','brand_en':'','sku':'','subproduct':[],price:0,'attributes':[]})
 const allbrands=ref([])
 const allcategory=ref([])
 const showcategorydlg=ref(false)
@@ -221,7 +221,7 @@ const addvariantimg=(subproduct,subindex)=>{
   setImageGallyCallback((imglist)=>{
     console.log('imglist:',imglist)
     console.log(imglist.map(t=>{return {'image_url':t,'image_alt':''} }))
-    subproduct.imgs=subproduct.imgs.concat(imglist.map(t=>{return {'image_url':t,'image_alt':''} }))}
+    subproduct.image=subproduct.image.concat(imglist.map(t=>{return {'image_url':t,'image_alt':''} }))}
   );
 
   imagegally.value.show();
@@ -275,7 +275,7 @@ watch(product.specifications,()=>{
   let tmp=calcDescartes(arr)
   product.subproduct=[]
   tmp.forEach(item=>{
-    let subproduct={"name_en":product.name_en+'-'+item,price:0,stock:0,'imgs':[]}
+    let subproduct={"name_en":product.name_en+'-'+item,price:0,sku:'','image':[]}
     product.subproduct.push(subproduct)
 
   })
