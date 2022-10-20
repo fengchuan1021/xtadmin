@@ -157,6 +157,7 @@ let routes=[
         meta: { title: '404',hidden:true},
         component: () => import('../views/404.vue'),
     },
+
 ];
 let router = createRouter({
     history: createWebHashHistory(),

@@ -1,6 +1,10 @@
 <template>
-  <el-dialog></el-dialog>
-<VariantSitedetail ref="variantdetail"></VariantSitedetail>
+  <el-dialog v-model="showdetailflag">
+    <VariantSitedetail ref="variantdetail"></VariantSitedetail>
+  </el-dialog>
+  <el-dialog v-model="showtranslateflag">
+    <Translate ref="translatedetail"></Translate>
+  </el-dialog>
   <el-card class="container">
 
     <template #header>
@@ -40,6 +44,7 @@
       <el-table-column prop="brand" label=""  >
         <template #default="scope">
           <el-button @click="detail(scope.row.product_id)">detail</el-button>
+          <el-button @click="translate(scope.row.product_id)">translate</el-button>
         </template>
       </el-table-column>
 
@@ -59,15 +64,28 @@
 </template>
 <script setup>
 import axios from '@/utils/axios'
-import {onMounted, reactive,ref} from 'vue'
+import {onMounted, reactive,ref,nextTick} from 'vue'
 import VariantSitedetail from './variantsitepricedetail.vue'
+import Translate from './varianttranslate.vue'
 const variantdetail=ref()
+const showdetailflag=ref(false)
+const showtranslateflag=ref(false)
+const translatedetail=ref()
 let state=reactive({pagenum:1,pagesize:2,filter:{},total:0})
 let data=ref([])
 const onSearch=()=>{
   getdata()
 }
-const detail=(product_id)=>{
+
+const translate=async (product_id)=>{
+  showtranslateflag.value=true
+  await nextTick()
+  translatedetail.value.show(product_id)
+}
+
+const detail=async (product_id)=>{
+  showdetailflag.value=true
+  await nextTick()
   variantdetail.value.show(product_id)
 }
 const getdata=()=>{
@@ -82,7 +100,7 @@ const getdata=()=>{
 }
 onMounted(()=>{
   getdata()
-  variantdetail.value.show('87305569047680067')
+
 })
 
 </script>

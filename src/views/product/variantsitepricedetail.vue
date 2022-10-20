@@ -1,7 +1,8 @@
 <template>
-<el-dialog
-v-model="dialogVisible"
->
+<el-dialog v-model="showpreviewflag">
+  <Preview ref="previewdetail"></Preview>
+</el-dialog>
+
 <el-table
     :span-method="arraySpanMethod"
     :data="data">
@@ -11,6 +12,7 @@ v-model="dialogVisible"
     </template>
   </el-table-column>
 <el-table-column prop="name_en" label="variant_name:"></el-table-column>
+
 <el-table-column prop="site_name" label="site_name:" />
 
   <el-table-column prop="warehouse_id" label="warehouse:" >
@@ -46,13 +48,26 @@ v-model="dialogVisible"
    </template>
   </el-table-column>
 
+  <el-table-column>
+    <template #default="scope">
+
+
+      <el-button @click="()=>preview(scope.row.site_id,scope.row.variant_id)">preview</el-button>
+    </template>
+  </el-table-column>
+
 </el-table>
-</el-dialog>
+
 </template>
 <script setup>
-import {onMounted, reactive,ref} from 'vue'
+import {nextTick, onMounted, reactive, ref} from 'vue'
 import axios from '@/utils/axios'
-const dialogVisible=ref(false)
+import Preview from './variantpreview.vue'
+
+const showpreviewflag=ref(false)
+
+const previewdetail=ref()
+
 const data=ref([])
 const allwarehouse=ref([])
 const product_id=ref()
@@ -66,6 +81,13 @@ const getvariantsitedetail=(product_id)=>{
     }
   })
 }
+const preview=async (siteid,variant_id)=>{
+  showpreviewflag.value=true
+  await nextTick()
+  previewdetail.value.show(siteid,variant_id)
+}
+
+
 const arraySpanMethod = ({
                            row,
                            column,
@@ -106,7 +128,6 @@ const togglestatus=(row)=>{
 
 const show=(inproduct_id)=>{
   product_id.value=inproduct_id
-  dialogVisible.value=true
   data.value=[]
   getvariantsitedetail(inproduct_id)
 }

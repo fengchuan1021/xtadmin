@@ -15,6 +15,9 @@
       <el-form-item label="sitename:">
         <el-input v-model="form.site_name"></el-input>
       </el-form-item>
+      <el-form-item label="language:">
+        <el-input v-model="form.lang"></el-input>
+      </el-form-item>
       <el-form-item label="sitedomain:">
         <el-input v-model="form.domainname"></el-input>
       </el-form-item>
@@ -32,7 +35,7 @@
 import axios from '@/utils/axios'
 import {ref,reactive,onMounted,watch} from 'vue'
 const warehouses=ref([])
-let form=reactive({site_name:'',warehouse_id:'',warehouse_name:''})
+let form=reactive({site_name:'',warehouse_id:'',warehouse_name:'','lang':'en'})
 
 watch(()=>form.warehouse_id,()=>{
   for(let i=0;i<warehouses.value.length;i++){
