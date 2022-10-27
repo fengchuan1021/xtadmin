@@ -215,7 +215,7 @@ const onAddcategory=()=>{
   console.log('nodes:',nodes)
   chosedcategory.value=nodes.map((i)=>{return {'category_id':i.category_id,'category_name':i.category_name}})
   product.category=chosedcategory.value.map(item=>item.category_id)
-
+  showcategorydlg.value=false
 }
 const addvariantimg=(subproduct,subindex)=>{
   setImageGallyCallback((imglist)=>{

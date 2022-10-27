@@ -26,6 +26,7 @@ const defaultProps = {
   children: 'children',
   label: 'category_name',
 }
+const emit=defineEmits(['close'])
 const append=(node,data)=>{
     ElMessageBox.prompt('Please input category_name', 'Tip', {
     confirmButtonText: 'OK',
