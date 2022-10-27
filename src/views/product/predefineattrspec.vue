@@ -1,4 +1,7 @@
 <template>
+  <el-dialog v-model="showtranslateflag">
+    <Translate ref="translatedetail" @closedlg="showtranslateflag=false"></Translate>
+  </el-dialog>
   <el-dialog v-model="showdlg">
     <el-form>
       <el-form-item label="name:">
@@ -47,7 +50,7 @@
           <el-button @click="onSearch">search</el-button>
         </el-form-item>
         <el-form-item style="display:block;float:right">
-          <el-button @click="showdlg=true">add predefine attr/spec</el-button>
+          <el-button @click="add()">add predefine attr/spec</el-button>
         </el-form-item>
       </el-form>
 
@@ -66,8 +69,10 @@
 
       <el-table-column label="action">
         <template #default="scope">
-          <el-button @click="deltepermission(scope.row.preattrspecific_id)">edit</el-button>
+          <el-button @click="edit(scope.row)">edit</el-button>
+          <el-button @click="translate(scope.row.preattrspecific_id)">translate</el-button>
           <el-button @click="delteattrspec(scope.row.preattrspecific_id)">delete</el-button>
+
         </template>
 
       </el-table-column>
@@ -87,20 +92,21 @@
 </template>
 <script setup>
 import axios from '@/utils/axios'
-import {onMounted, reactive,ref} from 'vue'
-
+import {nextTick, onMounted, reactive, ref} from 'vue'
+import Translate from './attrspecifictranslate.vue'
+const translatedetail=ref()
 const showdlg=ref(false)
-
+const showtranslateflag=ref(false)
 let state=reactive({pagenum:1,pagesize:20,filter:{},total:0})
 let data=ref([])
 
-let form=reactive({})
+let form=ref({})
 // const defaultProps = {
 //   children: 'children',
 //   label: 'label',
 // }
 const submitform=()=>{
-  axios.post('/backend/product/addpreattrspecific',form).then(ret=>{
+  axios.post('/backend/product/addpreattrspecific',form.value).then(ret=>{
     if(ret.status=='success'){
       ElMessage.success('create predefine attr/specification successfully')
       showdlg.value=false
@@ -108,12 +114,27 @@ const submitform=()=>{
     }
   })
 }
+const translate=async (id)=>{
+  showtranslateflag.value=true
+  await nextTick()
+  translatedetail.value.show(id)
+}
 const onSearch=()=>{
   getdata()
+}
+const edit=(row)=>{
+  form.value=row
+  showdlg.value=true
+}
+const add=()=>{
+  form.value={}
+
+  showdlg.value=true
 }
 const delteattrspec=(id)=>{
   axios.post(`/backend/product/delpreattrspecific/${id}`).then(ret=>{
     if(ret.status == 'success'){
+
       ElMessage.success('delete successfully')
       getdata()
     }

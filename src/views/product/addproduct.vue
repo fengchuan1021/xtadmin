@@ -100,7 +100,7 @@
           <div v-for="(subproduct,subindex) in product.subproduct" :key="subindex" style="display:flex;flex-direction:column">
             <div style="display:flex">
               title:<el-input v-model="subproduct.name_en"></el-input>
-              price:<el-input v-model="subproduct.price"></el-input>
+
               sku:<el-input v-model="subproduct.sku"></el-input>
               <div style='width:30px;height:30px;'> <IconCardImage style='width:30px;height:30px;' @click="addvariantimg(subproduct,subindex)"></IconCardImage></div>
             </div>
